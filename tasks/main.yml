@@ -37,6 +37,12 @@
                        if mariadb_server__apt_repository_map[mariadb_server__flavor] is string
                        else mariadb_server__apt_repository_map[mariadb_server__flavor]) }}'
 
+- name: DEBUG Run apt directly
+  command: apt-get install -y {{ mariadb_server__base_packages | join(" ") }} {{ mariadb_server__packages_map[mariadb_server__flavor] | join(" ") }} {{ mariadb_server__packages | join(" ") }} {{ "automysqlbackup" if mariadb_server__backup|bool else "" }}
+  register: debug_apt
+
+- debug: var=debug_apt
+
 - name: Install database server packages
   apt:
     name: '{{ item }}'
